@@ -16,28 +16,39 @@ int main() {
     maxrow = ((stop - 'A') * 2) + 1;
 
     int whitespaces = (stop - 'A');
-    printf("Whitespaces: %d\n", whitespaces);
 
     int step = -1;
 
+    int start = 65;
+    int now, sum;
+
+    sum = 0;
+
     for (row = 0; row < maxrow; row++) {
-        //printf("Row %d, whitespaces: %d\n", row, whitespaces);
-        //
-        //maxrow
         for (column = 0; column < maxrow - whitespaces; column++) {
             if (whitespaces > column)
-                printf("*");
+                printf(" ");
+
             else {
-                printf("A");
+                now = (sum) ? now + 1: start - (column - whitespaces);
+
+                if (now == 'A')
+                    sum = 1;
+
+                printf("%c", now);
             }
         }
 
         printf("\n");
 
         whitespaces += step;
+        start -= step;
 
-        if (whitespaces == 0)
+        if (whitespaces == 0) {
             step = -step;
+        }
+
+        sum = 0;
     }
 
     return 0;
