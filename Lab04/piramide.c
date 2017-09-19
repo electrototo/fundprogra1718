@@ -15,8 +15,29 @@ int main() {
 
     maxrow = ((stop - 'A') * 2) + 1;
 
+    int whitespaces = (stop - 'A');
+    printf("Whitespaces: %d\n", whitespaces);
+
+    int step = -1;
+
     for (row = 0; row < maxrow; row++) {
-        printf("Row %d\n", row);
+        //printf("Row %d, whitespaces: %d\n", row, whitespaces);
+        //
+        //maxrow
+        for (column = 0; column < maxrow - whitespaces; column++) {
+            if (whitespaces > column)
+                printf("*");
+            else {
+                printf("A");
+            }
+        }
+
+        printf("\n");
+
+        whitespaces += step;
+
+        if (whitespaces == 0)
+            step = -step;
     }
 
     return 0;
