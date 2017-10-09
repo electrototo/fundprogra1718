@@ -7,6 +7,7 @@
 #include <stdio.h>
 
 float mayor(float, float);
+void saludar();
 
 int main() {
     float a, b;
@@ -14,6 +15,8 @@ int main() {
     scanf("%f %f", &a, &b);
 
     printf("El numero mayor es: %.4f\n", mayor(a, b));
+
+    saludar();
 
     return 0;
 }
@@ -23,4 +26,10 @@ float mayor(float a, float b) {
         return a;
     else
         return b;
+}
+
+void saludar() {
+    printf("Bienvenido al programa\n");
+    printf(" de ejemplo\n");
+    printf("Bienvenido al programa\n");
 }
