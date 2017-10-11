@@ -10,8 +10,13 @@ int main() {
     unsigned long fib1 = 0, fib2 = 1, tmp = 0;
     int stop;
 
-    printf("Cuantos numeros de fibonacci? ");
+    printf("Cuantos numeros de fibonacci (0 - 94)? ");
     scanf("%d", &stop);
+
+    if (stop < 0 || stop > 94) {
+        printf("No esta dentro del rango.\n");
+        return 1;
+    }
 
     for (int i = 0; i < stop; i++) {
         printf("%lu%s", fib1, (i == stop - 1) ? "\n" : ", ");
