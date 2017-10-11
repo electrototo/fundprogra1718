@@ -7,29 +7,18 @@
 #include <stdio.h>
 
 int main() {
-    unsigned long fib1 = 0, fib2 = 1, tmp;
+    unsigned long fib1 = 0, fib2 = 1, tmp = 0;
     int stop;
 
     printf("Cuantos numeros de fibonacci? ");
     scanf("%d", &stop);
-    if (stop == 1){
-        printf("%d\n", 0);
-    }
-    else if (stop == 2) {
-        printf("%lu, %lu\n", fib1, fib2);
-    }
-    else {
-        stop -= 2;
 
-        printf("%lu, %lu,", fib1, fib2);
+    for (int i = 0; i < stop; i++) {
+        printf("%lu%s", fib1, (i == stop - 1) ? "\n" : ", ");
 
-        for (int i = 0; i < stop; i++) {
-            tmp = fib1 + fib2;
-            fib1 = fib2;
-            fib2 = tmp;
-
-            printf(" %lu%c", tmp, (i == stop - 1) ? '\n' : ',');
-        }
+        tmp = fib1 + fib2;
+        fib1 = fib2;
+        fib2 = tmp;
     }
 
     return 0;
