@@ -6,7 +6,7 @@
 
 #include <stdio.h>
 
-unsigned long factorial(int);
+unsigned long factorial(unsigned long);
 
 int main() {
     int num;
@@ -14,7 +14,7 @@ int main() {
     printf("Ingrese un numero: ");
     scanf("%d", &num);
 
-    if (num > 65) {
+    if (num > 20) {
         printf("Factorial demasiado grande\n");
         return -1;
     }
@@ -27,7 +27,7 @@ int main() {
     return 0;
 }
 
-unsigned long factorial(int n) {
+unsigned long factorial(unsigned long n) {
     if (n <= 1)
         return 1;
 
