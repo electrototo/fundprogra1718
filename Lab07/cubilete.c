@@ -9,6 +9,7 @@
 
 char dado();
 int menu();
+int menu_juego();
 void swap(int *, int *);
 void selection_sort(int *, int);
 int comparar(int *, int);
@@ -20,17 +21,110 @@ int main() {
 
     op = menu();
 
-    int computadora[5];
+    int computadora[5], jugador[5];
+    int tiro_actual = 0;
+
+    int computadora_tira = 1;
+    int jugador_tira = 1;
+
+    int puntaje_computadora = 0;
+    int puntaje_jugador = 0;
+
+    char dado1, dado2, dado3, dado4, dado5;
+
+    dado1 = dado2 = dado3 = dado4 = dado5 = 'n';
 
     if (op == 1) {
-        // Obten los primeros 5 tiros de la computadora
-        for (int i = 0; i < 5; i++)
-            computadora[i] = dado();
 
-        selection_sort(computadora, 5);
-        printf("Puntaje de la computadora: %d\n", comparar(computadora, 5));
+        do {
+            if (computadora_tira) {
+                // Obten los primeros 5 tiros de la computadora
+                for (int i = 0; i < 5; i++)
+                    computadora[i] = dado();
 
-        imprimir_dados(computadora);
+                selection_sort(computadora, 5);
+
+                puntaje_computadora = comparar(computadora, 5);
+            }
+
+            if (puntaje_computadora == 5 || puntaje_computadora == 4)
+                computadora_tira = 0;
+            else if (puntaje_computadora == 3) {
+                // deja a la suerte si la computadora tira o no
+                computadora_tira = rand() % 2;
+            }
+
+            if (jugador_tira) {
+                if (tiro_actual != 0) {
+                    printf("\tQuieres cambiar el dado 0 [s,n]? ");
+                    scanf(" %c", &dado1);
+
+                    printf("\tQuieres cambiar el dado 1 [s,n]? ");
+                    scanf(" %c", &dado2);
+
+                    printf("\tQuieres cambiar el dado 2 [s,n]? ");
+                    scanf(" %c", &dado3);
+
+                    printf("\tQuieres cambiar el dado 3 [s,n]? ");
+                    scanf(" %c", &dado4);
+
+                    printf("\tQuieres cambiar el dado 4 [s,n]? ");
+                    scanf(" %c", &dado5);
+
+                    printf("\n");
+                }
+                else {
+                    // Tira por primera vez
+
+                    for (int i = 0; i < 5; i++)
+                        jugador[i] = dado();
+                }
+                
+                if (dado1 == 's')
+                    jugador[0] = dado();
+
+                else if (dado2 == 's')
+                    jugador[1] = dado();
+
+                else if (dado3 == 's')
+                    jugador[2] = dado();
+
+                else if (dado4 == 's')
+                    jugador[3] = dado();
+
+                else if (dado5 == 's')
+                    jugador[4] = dado();
+
+                dado1 = dado2 = dado3 = dado4 = dado5 = 'n';
+
+
+                selection_sort(jugador, 5);
+                puntaje_jugador = comparar(jugador, 5);
+
+            }
+            printf("Tus dados:\n");
+            imprimir_dados(jugador);
+            
+            printf("Dados de la computadora:\n");
+            imprimir_dados(computadora);
+
+            printf("Puntaje de la ronda:\n");
+            printf("\tPuntaje del jugador: %d\n", puntaje_jugador);
+            printf("\tPuntaje de la computadora: %d\n", puntaje_computadora);
+
+            jugador_tira = !menu_juego();
+
+            tiro_actual++;
+
+        } while (tiro_actual < 5);
+
+        if (puntaje_jugador > puntaje_computadora)
+            printf("¡¡GANASTE!!\n");
+        else if (puntaje_jugador < puntaje_computadora)
+            printf("Perdiste\n");
+        else
+            printf("Empate\n");
+
     }
 
     else {
@@ -48,6 +142,24 @@ int menu() {
         printf("Opcion: ");
         scanf("%d", &n);
     } while (n < 1 || n > 2);
+
+    printf("\n");
+
+    return n;
+}
+
+int menu_juego() {
+    printf("\n[0] Tirar\n");
+    printf("[1] No tirar\n");
+
+    int n;
+
+    do {
+        printf("Opcion: ");
+        scanf("%d", &n);
+    } while (n < 0 || n > 1);
+    
+    printf("\n");
 
     return n;
 }
@@ -116,7 +228,11 @@ void swap(int *a, int *b) {
 }
 
 void imprimir_dados(int *dados) {
+    char opciones[6] = {'9', '1', 'J', 'Q', 'K', 'A'};
+
     for (int i = 0; i < 5; i++) {
-        printf("cara: %d\n", dados[i]);
+        printf("dado %d: %c\n", i, opciones[dados[i]]);
     }
+
+    printf("\n");
 }
