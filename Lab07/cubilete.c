@@ -228,11 +228,46 @@ void swap(int *a, int *b) {
 }
 
 void imprimir_dados(int *dados) {
+    // -----
+    // |   |
+    // -----
+
     char opciones[6] = {'9', '1', 'J', 'Q', 'K', 'A'};
 
-    for (int i = 0; i < 5; i++) {
-        printf("dado %d: %c\n", i, opciones[dados[i]]);
+    for (int i = 1; i <= 29; i++) {
+        if (i % 6 != 0)
+            printf("*");
+        else
+            printf(" ");
     }
 
     printf("\n");
+
+    // imprime la cara del dado
+    int j = 0;
+    int spacing = 2;
+    for (int i = 1; i <= 29; i++){
+        if (i % 6 != 0 && i % 3 != 0 && i % 2 != 0)
+            printf("|");
+
+        else if ((i % 6 == 0 ^ i % 3 == 0)) {
+            printf("%c", opciones[dados[j]]);
+            j++;
+        }
+
+        else
+            printf(" ");
+    }
+
+    printf("\n");
+
+    for (int i = 1; i <= 29; i++) {
+        if (i % 6 != 0)
+            printf("*");
+        else
+            printf(" ");
+    }
+
+    printf("\n\n");
+
 }
