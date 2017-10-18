@@ -1,5 +1,6 @@
 /*
- *
+ * autores: elias cohen y cristobal liendo
+ * fecha: 16/10/17
  * descripcion: cubilete
 */
 
