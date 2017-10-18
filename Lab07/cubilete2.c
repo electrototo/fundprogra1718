@@ -9,6 +9,9 @@ void imprimir_dados(char d1, char d2, char d3, char d4, char d5);
 int calcular_puntaje(int d1, int d2, int d3, int d4, int d5, int d6);
 int preguntar_respuesta(int);
 
+void sumar_lados(char);
+void restar_lados(char);
+
 static int j9, j10, jj, jq, jk, ja;
 static int c9, c10, cj, cq, ck, ca;
 
@@ -108,34 +111,7 @@ int main() {
                     for (int i = 0; i < 5; i++) {
                         jugador_actual = dado();
 
-                        switch (jugador_actual) {
-                            case '9':
-                                j9++;
-                                break;
-
-                            case '1':
-                                j10++;
-                                break;
-
-                            case 'a':
-                                ja++;
-                                break;
-
-                            case 'j':
-                                jj++;
-                                break;
-
-                            case 'q':
-                                jq++;
-                                break;
-
-                            case 'k':
-                                jk++;
-                                break;
-
-                            default:
-                                break;
-                        }
+                        sumar_lados(jugador_actual);
 
                         switch (i) {
                             case 0:
@@ -166,313 +142,33 @@ int main() {
                 else {
                     if (tira_jugador == 1) {
                         if (preguntar_respuesta(0)) {
-                            switch (jd1) {
-                                case '9':
-                                    j9--;
-                                    break;
-
-                                case '1':
-                                    j10--;
-                                    break;
-
-                                case 'a':
-                                    ja--;
-                                    break;
-
-                                case 'j':
-                                    jj--;
-                                    break;
-
-                                case 'q':
-                                    jq--;
-                                    break;
-
-                                case 'k':
-                                    jk--;
-                                    break;
-
-                                default:
-                                    break;
-                            }
-
+                            restar_lados(jd1);
                             jd1 = dado();
-
-                            switch (jd1) {
-                                case '9':
-                                    j9++;
-                                    break;
-
-                                case '1':
-                                    j10++;
-                                    break;
-
-                                case 'a':
-                                    ja++;
-                                    break;
-
-                                case 'j':
-                                    jj++;
-                                    break;
-
-                                case 'q':
-                                    jq++;
-                                    break;
-
-                                case 'k':
-                                    jk++;
-                                    break;
-
-                                default:
-                                    break;
-                            }
+                            sumar_lados(jd1);
                         }
 
                         if (preguntar_respuesta(1)) {
-                            switch (jd2) {
-                                case '9':
-                                    j9--;
-                                    break;
-
-                                case '1':
-                                    j10--;
-                                    break;
-
-                                case 'a':
-                                    ja--;
-                                    break;
-
-                                case 'j':
-                                    jj--;
-                                    break;
-
-                                case 'q':
-                                    jq--;
-                                    break;
-
-                                case 'k':
-                                    jk--;
-                                    break;
-
-                                default:
-                                    break;
-                            }
-
+                            restar_lados(jd2);
                             jd2 = dado();
-
-                            switch (jd2) {
-                                case '9':
-                                    j9++;
-                                    break;
-
-                                case '1':
-                                    j10++;
-                                    break;
-
-                                case 'a':
-                                    ja++;
-                                    break;
-
-                                case 'j':
-                                    jj++;
-                                    break;
-
-                                case 'q':
-                                    jq++;
-                                    break;
-
-                                case 'k':
-                                    jk++;
-                                    break;
-
-                                default:
-                                    break;
-                            }
+                            sumar_lados(jd2);
                         }
 
                         if (preguntar_respuesta(2)) {
-                            switch (jd3) {
-                                case '9':
-                                    j9--;
-                                    break;
-
-                                case '1':
-                                    j10--;
-                                    break;
-
-                                case 'a':
-                                    ja--;
-                                    break;
-
-                                case 'j':
-                                    jj--;
-                                    break;
-
-                                case 'q':
-                                    jq--;
-                                    break;
-
-                                case 'k':
-                                    jk--;
-                                    break;
-
-                                default:
-                                    break;
-                            }
-
+                            restar_lados(jd3);
                             jd3 = dado();
-
-                            switch (jd3) {
-                                case '9':
-                                    j9++;
-                                    break;
-
-                                case '1':
-                                    j10++;
-                                    break;
-
-                                case 'a':
-                                    ja++;
-                                    break;
-
-                                case 'j':
-                                    jj++;
-                                    break;
-
-                                case 'q':
-                                    jq++;
-                                    break;
-
-                                case 'k':
-                                    jk++;
-                                    break;
-
-                                default:
-                                    break;
-                            }
+                            sumar_lados(jd3);
                         }
 
                         if (preguntar_respuesta(3)) {
-                            switch (jd4) {
-                                case '9':
-                                    j9--;
-                                    break;
-
-                                case '1':
-                                    j10--;
-                                    break;
-
-                                case 'a':
-                                    ja--;
-                                    break;
-
-                                case 'j':
-                                    jj--;
-                                    break;
-
-                                case 'q':
-                                    jq--;
-                                    break;
-
-                                case 'k':
-                                    jk--;
-                                    break;
-
-                                default:
-                                    break;
-                            }
-
+                            restar_lados(jd4);
                             jd4 = dado();
-
-                            switch (jd4) {
-                                case '9':
-                                    j9++;
-                                    break;
-
-                                case '1':
-                                    j10++;
-                                    break;
-
-                                case 'a':
-                                    ja++;
-                                    break;
-
-                                case 'j':
-                                    jj++;
-                                    break;
-
-                                case 'q':
-                                    jq++;
-                                    break;
-
-                                case 'k':
-                                    jk++;
-                                    break;
-
-                                default:
-                                    break;
-                            }
+                            sumar_lados(jd4);
                         }
 
                         if (preguntar_respuesta(4)) {
-                            switch (jd5) {
-                                case '9':
-                                    j9--;
-                                    break;
-
-                                case '1':
-                                    j10--;
-                                    break;
-
-                                case 'a':
-                                    ja--;
-                                    break;
-
-                                case 'j':
-                                    jj--;
-                                    break;
-
-                                case 'q':
-                                    jq--;
-                                    break;
-
-                                case 'k':
-                                    jk--;
-                                    break;
-
-                                default:
-                                    break;
-                            }
-
+                            restar_lados(jd5);
                             jd5 = dado();
-
-                            switch (jd5) {
-                                case '9':
-                                    j9++;
-                                    break;
-
-                                case '1':
-                                    j10++;
-                                    break;
-
-                                case 'a':
-                                    ja++;
-                                    break;
-
-                                case 'j':
-                                    jj++;
-                                    break;
-
-                                case 'q':
-                                    jq++;
-                                    break;
-
-                                case 'k':
-                                    jk++;
-                                    break;
-
-                                default:
-                                    break;
-                            }
+                            sumar_lados(jd5);
                         }
                     }
                 }
@@ -716,4 +412,66 @@ int calcular_puntaje(int d1, int d2, int d3, int d4, int d5, int d6) {
     }
 
     return puntaje;
+}
+
+void sumar_lados(char d) {
+    switch (d) {
+        case '9':
+            j9++;
+            break;
+
+        case '1':
+            j10++;
+            break;
+
+        case 'a':
+            ja++;
+            break;
+
+        case 'j':
+            jj++;
+            break;
+
+        case 'q':
+            jq++;
+            break;
+
+        case 'k':
+            jk++;
+            break;
+
+        default:
+            break;
+    }
+}
+
+void restar_lados(char d) {
+    switch (d) {
+        case '9':
+            j9--;
+            break;
+
+        case '1':
+            j10--;
+            break;
+
+        case 'a':
+            ja--;
+            break;
+
+        case 'j':
+            jj--;
+            break;
+
+        case 'q':
+            jq--;
+            break;
+
+        case 'k':
+            jk--;
+            break;
+
+        default:
+            break;
+    }
 }
