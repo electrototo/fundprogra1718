@@ -1,3 +1,9 @@
+/*
+ * autores: elias cohen y cristobal liendo.
+ * fecha: 17/10/17
+ * descripcion: cubilete SIN arreglos
+*/
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
