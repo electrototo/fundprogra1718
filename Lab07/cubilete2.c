@@ -180,17 +180,17 @@ int main() {
                 }
             }
 
-            printf("Dados de la computadora:\n");
-            imprimir_dados(cd1, cd2, cd3, cd4, cd5);
-
-            printf("\tPuntaje de la computadora: %d\n", puntaje_computadora);
-            printf("\n");
-
             printf("Tus dados:\n");
             imprimir_dados(jd1, jd2, jd3, jd4, jd5);
 
+            printf("Dados de la computadora:\n");
+            imprimir_dados(cd1, cd2, cd3, cd4, cd5);
+
             puntaje_jugador = calcular_puntaje(j9, j10, jj, jq, jk, ja);
-            printf("\tTu puntaje: %d\n", puntaje_jugador);
+
+            printf("Puntaje de la ronda:\n");
+            printf("\tPuntaje del jugador: %d\n", puntaje_jugador);
+            printf("\tPuntaje de la computadora: %d\n", puntaje_computadora);
             printf("\n");
             
             printf("\n");
@@ -261,6 +261,8 @@ int menu() {
 
     } while (n < 0 || n > 2);
 
+    printf("\n");
+
     return n;
 }
 
@@ -269,6 +271,7 @@ void imprimir_dados(char d1, char d2, char d3, char d4, char d5) {
     printf("| %c | | %c | | %c | | %c | | %c |\n", d1, d2, d3, d4, d5);
     printf("----- ----- ----- ----- -----\n");
     printf("  0     1     2     3     4\n");
+    printf("\n");
 }
 
 int menu_jugador() {
@@ -276,6 +279,7 @@ int menu_jugador() {
     printf("[2] No tirar\n");
 
     int n;
+
     do {
         printf("Opcion: ");
         scanf("%d", &n);
@@ -305,7 +309,7 @@ int calcular_puntaje(int d1, int d2, int d3, int d4, int d5, int d6) {
     int puntaje = 0;
 
     if (d1 == 5 || d2 == 5 || d3 == 5 || d4 == 5 || d5 == 5 || d6 == 5)
-        puntaje = 5;
+        puntaje = 6;
 
     else if (d1 <= 1 && d2 <= 1 && d3 <= 1 && d4 <= 1 && d5 <= 1 && d6 <= 1)
         puntaje = 0;
@@ -376,44 +380,63 @@ int calcular_puntaje(int d1, int d2, int d3, int d4, int d5, int d6) {
         else if (d5 == 2 && d6 == 2 && d1 <= 1 && d2 <= 1 && d3 <= 1 && d4 <= 1)
             puntaje = 2;
 
+        // calcula si hubo una tercia
+        if (d1 == 3 && d2 <= 1 && d3 <= 1 && d4 <= 1 && d5 <= 1 && d6 <= 1)
+            puntaje = 3;
+
+        else if (d2 == 3 && d1 <= 1 && d3 <= 1 && d4 <= 1 && d5 <= 1 && d6 <= 1)
+            puntaje = 3;
+
+        else if (d3 == 3 && d1 <= 1 && d2 <= 1 && d4 <= 1 && d5 <= 1 && d6 <= 1)
+            puntaje = 3;
+
+        else if (d4 == 3 && d1 <= 1 && d2 <= 1 && d3 <= 1 && d5 <= 1 && d6 <= 1)
+            puntaje = 3;
+
+        else if (d5 == 3 && d1 <= 1 && d2 <= 1 && d3 <= 1 && d4 <= 1 && d6 <= 1)
+            puntaje = 3;
+
+        else if (d6 == 3 && d1 <= 1 && d2 <= 1 && d3 <= 1 && d4 <= 1 && d5 <= 1)
+            puntaje = 3;
+
         // calcula si hubo 1 tercia y 1 par
         if (d1 == 3 && (d2 == 2 || d3 == 2 || d4 == 2 || d5 == 2 || d6 == 2))
-            puntaje = 3;
+            puntaje = 4;
 
         else if (d2 == 3 && (d1 == 2 || d3 == 2 || d4 == 2 || d5 == 2 || d6 == 2))
-            puntaje = 3;
+            puntaje = 4;
 
         else if (d3 == 3 && (d1 == 2 || d2 == 2 || d4 == 2 || d5 == 2 || d6 == 2))
-            puntaje = 3;
+            puntaje = 4;
 
         else if (d4 == 3 && (d1 == 2 || d2 == 2 || d3 == 2 || d5 == 2 || d6 == 2))
-            puntaje = 3;
+            puntaje = 4;
 
         else if (d5 == 3 && (d1 == 2 || d2 == 2 || d3 == 2 || d4 == 2 || d6 == 2))
-            puntaje = 3;
+            puntaje = 4;
 
         else if (d6 == 3 && (d1 == 2 || d2 == 2 || d3 == 2 || d4 == 2 || d5 == 2))
-            puntaje = 3;
+            puntaje = 4;
 
 
         // calcula si hubo 4 iguales
         if (d1 == 4 && d2 <= 1 && d3 <= 1 && d4 <= 1 && d5 <= 1 && d6 <= 1)
-            puntaje = 4;
+            puntaje = 5;
 
         else if (d2 == 4 && d1 <= 1 && d3 <= 1 && d4 <= 1 && d5 <= 1 && d6 <= 1)
-            puntaje = 4;
+            puntaje = 5;
 
         else if (d3 == 4 && d1 <= 1 && d2 <= 1 && d4 <= 1 && d5 <= 1 && d6 <= 1)
-            puntaje = 4;
+            puntaje = 5;
 
         else if (d4 == 4 && d1 <= 1 && d2 <= 1 && d3 <= 1 && d5 <= 1 && d6 <= 1)
-            puntaje = 4;
+            puntaje = 5;
 
         else if (d5 == 4 && d1 <= 1 && d2 <= 1 && d3 <= 1 && d4 <= 1 && d6 <= 1)
-            puntaje = 4;
+            puntaje = 5;
 
         else if (d6 == 4 && d1 <= 1 && d2 <= 1 && d3 <= 1 && d4 <= 1 && d5 <= 1)
-            puntaje = 4;
+            puntaje = 5;
 
     }
 
