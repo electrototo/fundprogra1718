@@ -202,10 +202,10 @@ int main() {
         }
 
         if (puntaje_computadora > puntaje_jugador)
-            printf("\nLo lamento, perdiste\n");
+            printf("\nPerdiste\n");
 
         else if (puntaje_jugador > puntaje_computadora)
-            printf("\nGANASTE!!!\n");
+            printf("\n¡¡GANASTE!!!\n");
 
         else
             printf("\nEmpate\n");
