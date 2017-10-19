@@ -8,13 +8,31 @@
 #include <stdlib.h>
 #include <time.h>
 
+// funcion dado: regresa un valor entre el 0 y 5
 char dado();
+
+// funcion menu: pregunta si el usuario quiere jugar o no
 int menu();
+
+// funcion menu_juego: pregunta si el usuario quiere tirar o no
 int menu_juego();
-void swap(int *, int *);
+
+// funcion selection_sort: ordena los contenidos de un arreglo de menor a mayor
 void selection_sort(int *, int);
+
+// funcion swap: funcion auxiliar del que hace uso selection sort para cambiar
+//               de posicion dos numeros en un arreglo
+void swap(int *, int *);
+
+// funcion comparar: obtiene el puntaje de cada jugada
 int comparar(int *, int);
+
+// funcion imprimir dados: imprime los dados actuales
 void imprimir_dados(int *dados);
+
+// funcion preguntar_respuesta: pregunta si quiere cambiar el dado "numero",
+//                              donde "numero" corresponde al numero del dado
+int preguntar_respuesta(int numero);
 
 int main() {
     int op;
@@ -22,22 +40,19 @@ int main() {
 
     op = menu();
 
+    // los dados actuales del jugador y la computadora
     int computadora[5], jugador[5];
-    int tiro_actual = 0;
 
+    // vaiables que controlan los turnos del jugador y la computadora
     int computadora_tira = 1;
     int jugador_tira = 1;
 
+    // variables que controlan los puntajes del jugador y la computadora
     int puntaje_computadora = 0;
     int puntaje_jugador = 0;
 
-    char dado1, dado2, dado3, dado4, dado5;
-
-    dado1 = dado2 = dado3 = dado4 = dado5 = 'n';
-
     if (op == 1) {
-
-        do {
+        for (int i = 0; i < 5; i++)
             if (computadora_tira) {
                 // Obten los primeros 5 tiros de la computadora
                 for (int i = 0; i < 5; i++)
@@ -46,63 +61,33 @@ int main() {
                 selection_sort(computadora, 5);
 
                 puntaje_computadora = comparar(computadora, 5);
+
+                if (puntaje_computadora > 3)
+                    computadora_tira = 0;
+                else if (puntaje_computadora == 3) {
+                    // deja a la suerte si la computadora tira o no
+                    computadora_tira = rand() % 2;
+                }
             }
 
-            if (puntaje_computadora == 5 || puntaje_computadora == 4)
-                computadora_tira = 0;
-            else if (puntaje_computadora == 3) {
-                // deja a la suerte si la computadora tira o no
-                computadora_tira = rand() % 2;
-            }
 
             if (jugador_tira) {
-                if (tiro_actual != 0) {
-                    printf("\tQuieres cambiar el dado 0 [s,n]? ");
-                    scanf(" %c", &dado1);
-
-                    printf("\tQuieres cambiar el dado 1 [s,n]? ");
-                    scanf(" %c", &dado2);
-
-                    printf("\tQuieres cambiar el dado 2 [s,n]? ");
-                    scanf(" %c", &dado3);
-
-                    printf("\tQuieres cambiar el dado 3 [s,n]? ");
-                    scanf(" %c", &dado4);
-
-                    printf("\tQuieres cambiar el dado 4 [s,n]? ");
-                    scanf(" %c", &dado5);
-
-                    printf("\n");
+                if (i != 0) {
+                    for (int i = 0; i < 5; i++) {
+                        if (preguntar_respuesta(i))
+                            jugador[i] = dado();
+                    }
                 }
                 else {
                     // Tira por primera vez
-
                     for (int i = 0; i < 5; i++)
                         jugador[i] = dado();
                 }
                 
-                if (dado1 == 's')
-                    jugador[0] = dado();
-
-                else if (dado2 == 's')
-                    jugador[1] = dado();
-
-                else if (dado3 == 's')
-                    jugador[2] = dado();
-
-                else if (dado4 == 's')
-                    jugador[3] = dado();
-
-                else if (dado5 == 's')
-                    jugador[4] = dado();
-
-                dado1 = dado2 = dado3 = dado4 = dado5 = 'n';
-
-
                 selection_sort(jugador, 5);
                 puntaje_jugador = comparar(jugador, 5);
-
             }
+
             printf("Tus dados:\n");
             imprimir_dados(jugador);
             
@@ -114,10 +99,7 @@ int main() {
             printf("\tPuntaje de la computadora: %d\n", puntaje_computadora);
 
             jugador_tira = !menu_juego();
-
-            tiro_actual++;
-
-        } while (tiro_actual < 5);
+        }
 
         if (puntaje_jugador > puntaje_computadora)
             printf("¡¡GANASTE!!\n");
@@ -125,12 +107,9 @@ int main() {
             printf("Perdiste\n");
         else
             printf("Empate\n");
-
     }
 
-    else {
-        return 0;
-    }
+    return 0;
 }
 
 int menu() {
@@ -171,36 +150,57 @@ char dado() {
 
 int comparar(int *jugada, int length) {
     int anterior;
+
     int cambios = 0, posibilidad = 0;
+    int max = 0, actual = 1;
 
-    anterior = jugada[0];
     for(int i = 1; i < length; i++) {
-        if (anterior != jugada[i]) {
-            if (i == 2 || i == 3)
-                posibilidad = 1;
-
+        if (jugada[i - 1] != jugada[i]) {
             cambios++;
-        }
 
-        anterior = jugada[i];
+            if (actual > max)
+                max = actual;
+
+            actual = 1;
+        }
+        else {
+            actual++;
+        }
     }
 
+    if (actual > max)
+        max = actual;
+
     switch (cambios) {
+        // 5 iguales
         case 0:
-            return 5;
+            return 6;
             break;
         case 1:
-            if (!posibilidad)
+            // 4 iguales
+            if (max == 4)
+                return 5;
+
+            // 1 tercia y 1 par
+            else if (max == 3)
                 return 4;
-            else
-                return 3;
+
             break;
         case 2:
-            return 2;
+            // 1 tercia
+            if (max == 3)
+                return 3;
+
+            // 2 pares
+            else if (max == 2)
+                return 2;
+
             break;
+        // 1 par
         case 3:
             return 1;
             break;
+        // 0 iguales
         default:
             return 0;
             break;
@@ -244,4 +244,19 @@ void imprimir_dados(int *dados) {
     printf("----- ----- ----- ----- -----\n");
     printf("  0     1     2     3     4\n");
     printf("\n");
+}
+
+int preguntar_respuesta(int numero) {
+    char respuesta;
+
+    do {
+        printf("Quieres cambiar el dado %d [s, n]? ", numero);
+        scanf(" %c", &respuesta);
+    } while (respuesta != 's' && respuesta != 'n');
+
+    if (respuesta == 's')
+        return 1;
+
+    else
+        return 0;
 }
