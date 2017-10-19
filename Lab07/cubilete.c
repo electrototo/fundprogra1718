@@ -34,6 +34,9 @@ void imprimir_dados(int *dados);
 //                              donde "numero" corresponde al numero del dado
 int preguntar_respuesta(int numero);
 
+// funcion calcular_puntaje: obtiene el puntaje total de la jugada
+int calcular_puntaje(int *baraja);
+
 int main() {
     int op;
     srand(time(0));
@@ -52,42 +55,44 @@ int main() {
     int puntaje_jugador = 0;
 
     if (op == 1) {
-        for (int i = 0; i < 5; i++)
+        for (int i = 0; i < 5; i++) {
             if (computadora_tira) {
                 // Obten los primeros 5 tiros de la computadora
                 for (int i = 0; i < 5; i++)
                     computadora[i] = dado();
 
-                selection_sort(computadora, 5);
+                // calcula el puntaje de la computadora
+                puntaje_computadora = calcular_puntaje(computadora);
 
-                puntaje_computadora = comparar(computadora, 5);
-
+                // si el puntaje es mayor a 3, no vuelva a tirar
                 if (puntaje_computadora > 3)
                     computadora_tira = 0;
-                else if (puntaje_computadora == 3) {
-                    // deja a la suerte si la computadora tira o no
+
+                // de lo contrario, deja a la suerte si la computadora tira o no
+                else if (puntaje_computadora == 3)
                     computadora_tira = rand() % 2;
-                }
             }
 
-
             if (jugador_tira) {
+                // si no es el primer tiro que hace, pregunta que dados quiere
+                // volver a tirar
                 if (i != 0) {
                     for (int i = 0; i < 5; i++) {
                         if (preguntar_respuesta(i))
                             jugador[i] = dado();
                     }
                 }
+                // de lo contrario, tira todos los dados por primera vez
                 else {
-                    // Tira por primera vez
                     for (int i = 0; i < 5; i++)
                         jugador[i] = dado();
                 }
-                
-                selection_sort(jugador, 5);
-                puntaje_jugador = comparar(jugador, 5);
-            }
 
+                // calcula el puntaje del jugador
+                puntaje_jugador = calcular_puntaje(jugador);
+            }
+            
+            // Imprime los dados y puntajes del jugador y la computadora
             printf("Tus dados:\n");
             imprimir_dados(jugador);
             
@@ -98,9 +103,12 @@ int main() {
             printf("\tPuntaje del jugador: %d\n", puntaje_jugador);
             printf("\tPuntaje de la computadora: %d\n", puntaje_computadora);
 
-            jugador_tira = !menu_juego();
+            // pregunta si el jugador quiere tirar o no
+            if (i != 4)
+                jugador_tira = !menu_juego();
         }
 
+        // imprime los resultados de la partida
         if (puntaje_jugador > puntaje_computadora)
             printf("¡¡GANASTE!!\n");
         else if (puntaje_jugador < puntaje_computadora)
@@ -259,4 +267,12 @@ int preguntar_respuesta(int numero) {
 
     else
         return 0;
+}
+
+int calcular_puntaje(int *baraja) {
+    int p;
+    selection_sort(baraja, 5);
+    p = comparar(baraja, 5);
+
+    return p;
 }
