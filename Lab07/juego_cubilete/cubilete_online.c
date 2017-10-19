@@ -332,6 +332,9 @@ void set_connection() {
     }
 }
 
+void set_server() {
+}
+
 void send_data(char *msg) {
     if (sendto(s, msg, strlen(msg) , 0 , (struct sockaddr *) &si_other, slen)==-1) {
         die("sendto()");
