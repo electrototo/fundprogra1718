@@ -15,62 +15,48 @@
 #include <unistd.h>
  
 #define SERVER "127.0.0.1"
-#define BUFLEN 512  //Max length of buffer
 #define PORT 8888   //The port on which to send data
 
-struct sockaddr_in si_other;
-int s, i, slen=sizeof(si_other);
-char buf[BUFLEN];
-char message[BUFLEN];
-
-// funcion dado: regresa un valor entre el 0 y 5
 char dado();
-
-// funcion menu: pregunta si el usuario quiere jugar o no
 int menu();
-
-// funcion menu_juego: pregunta si el usuario quiere tirar o no
 int menu_juego();
-
-// funcion selection_sort: ordena los contenidos de un arreglo de menor a mayor
 void selection_sort(int *, int);
-
-// funcion swap: funcion auxiliar del que hace uso selection sort para cambiar
-//               de posicion dos numeros en un arreglo
 void swap(int *, int *);
-
-// funcion comparar: obtiene el puntaje de cada jugada
 int comparar(int *, int);
-
-// funcion imprimir dados: imprime los dados actuales
 void imprimir_dados(int *dados);
-
-// funcion preguntar_respuesta: pregunta si quiere cambiar el dado "numero",
-//                              donde "numero" corresponde al numero del dado
 int preguntar_respuesta(int numero);
-
-// funcion calcular_puntaje: obtiene el puntaje total de la jugada
 int calcular_puntaje(int *baraja);
 
-void set_connection();
 void send_data(char *msg);
 
+// Server method
+void set_server();
+struct sockaddr_in si_me, si_other;
+
+int s, i, slen = sizeof(si_other), recv_len;
+
+#define BUFLEN 100
+char buffer[BUFLEN];
+
 void dados_to_char(int *, char *);
+void char_to_dados(char *asciidados, int *dados);
 
 int main() {
-    set_connection();
-
-    int op;
     srand(time(0));
 
-    op = menu();
+    set_server();
+
+    int op;
+
+    char username[100];
+    char remote_username[100];
 
     // los dados actuales del jugador y la computadora
     int computadora[5], jugador[5];
 
     // vaiables que controlan los turnos del jugador y la computadora
-    int computadora_tira = 1;
-    int jugador_tira = 1;
+    int jugador1_tira = 1;
+    int jugador2_tira = 1;
 
     // variables que controlan los puntajes del jugador y la computadora
     int puntaje_computadora = 0;
@@ -78,26 +64,45 @@ int main() {
 
     char jugador_dados_ascii[6];
 
+    printf("Esperando a que el segundo jugador se una...\n");
+
+    memset(buffer, '\0', BUFLEN);
+    recvfrom(s, buffer, BUFLEN, 0, (struct sockaddr *) &si_other, &slen);
+
+    if (buffer[0] != '0') {
+        printf("Invalid data.\n");
+        return 1;
+    }
+
+    memset(buffer, '\0', BUFLEN);
+    recvfrom(s, buffer, BUFLEN, 0, (struct sockaddr *) &si_other, &slen);
+
+    strcpy(remote_username, buffer);
+    printf("\nEl usuario [%s] se ha unido\n\n", remote_username);
+
+    printf("Ingresa tu nombre de usuario: ");
+    scanf("%s", username);
+
+    send_data("0");
+    send_data(username);
+
+    op = menu();
+
     if (op == 1) {
         for (int i = 0; i < 5; i++) {
-            if (computadora_tira) {
-                // Obten los primeros 5 tiros de la computadora
-                for (int i = 0; i < 5; i++)
-                    computadora[i] = dado();
+            // Obten los dados del jugador
+            printf("\nEsperando a que [%s] tire sus dados\n\n", remote_username);
+            recvfrom(s, buffer, BUFLEN, 0, (struct sockaddr *) &si_other, &slen);
+            char_to_dados(buffer, computadora);
+            memset(buffer, '\0', BUFLEN);
 
-                // calcula el puntaje de la computadora
-                puntaje_computadora = calcular_puntaje(computadora);
+            puntaje_computadora = calcular_puntaje(computadora);
 
-                // si el puntaje es mayor a 3, no vuelva a tirar
-                if (puntaje_computadora > 3)
-                    computadora_tira = 0;
+            // pregunta si el jugador quiere tirar o no
+            if (i != 0 && i != 4)
+                jugador2_tira = !menu_juego();
 
-                // de lo contrario, deja a la suerte si la computadora tira o no
-                else if (puntaje_computadora == 3)
-                    computadora_tira = rand() % 2;
-            }
-
-            if (jugador_tira) {
+            if (jugador2_tira) {
                 // si no es el primer tiro que hace, pregunta que dados quiere
                 // volver a tirar
                 if (i != 0) {
@@ -115,31 +120,29 @@ int main() {
                 // calcula el puntaje del jugador
                 puntaje_jugador = calcular_puntaje(jugador);
             }
+
+            // Manda los dados al otro jugador
+            dados_to_char(jugador, jugador_dados_ascii);
+            send_data(jugador_dados_ascii);
             
             // Imprime los dados y puntajes del jugador y la computadora
             printf("Tus dados:\n");
             imprimir_dados(jugador);
-            
-            printf("Dados de la computadora:\n");
+
+            printf("\nDados de [%s]:\n", remote_username);
             imprimir_dados(computadora);
 
             printf("Puntaje de la ronda:\n");
-            printf("\tPuntaje del jugador: %d\n", puntaje_jugador);
-            printf("\tPuntaje de la computadora: %d\n", puntaje_computadora);
+            printf("\tPuntaje de [%s]: %d\n", username, puntaje_jugador);
+            printf("\tPuntaje de [%s]: %d\n", remote_username, puntaje_computadora);
 
-            dados_to_char(jugador, jugador_dados_ascii);
-            send_data(jugador_dados_ascii);
-
-            // pregunta si el jugador quiere tirar o no
-            if (i != 4)
-                jugador_tira = !menu_juego();
         }
 
         // imprime los resultados de la partida
         if (puntaje_jugador > puntaje_computadora)
-            printf("¡¡GANASTE!!\n");
+            printf("%s es un ganador, %s es un perdedor\n", username, remote_username);
         else if (puntaje_jugador < puntaje_computadora)
-            printf("Perdiste\n");
+            printf("%s es un ganador, %s es un perdedor\n", remote_username, username);
         else
             printf("Empate\n");
     }
@@ -288,6 +291,12 @@ void dados_to_char(int *dados, char *asciidados) {
     *asciidados = '\0';
 }
 
+void char_to_dados(char *asciidados, int *dados) {
+    do {
+        *dados++ = *asciidados++ - '0';
+    } while (*asciidados);
+}
+
 int preguntar_respuesta(int numero) {
     char respuesta;
 
@@ -311,32 +320,17 @@ int calcular_puntaje(int *baraja) {
     return p;
 }
 
-void die(char *s)
-{
-    perror(s);
-    exit(1);
-}
-
-void set_connection() {
-    if ( (s=socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP)) == -1) {
-        die("socket");
-    }
- 
-    memset((char *) &si_other, 0, sizeof(si_other));
-    si_other.sin_family = AF_INET;
-    si_other.sin_port = htons(PORT);
-     
-    if (inet_aton(SERVER , &si_other.sin_addr) == 0) {
-        fprintf(stderr, "inet_aton() failed\n");
-        exit(1);
-    }
-}
-
 void set_server() {
+    s = socket (AF_INET, SOCK_DGRAM, IPPROTO_UDP);
+    memset((char *) &si_me, 0, sizeof(si_me));
+
+    si_me.sin_family = AF_INET;
+    si_me.sin_port = htons(PORT);
+    si_me.sin_addr.s_addr = htonl(INADDR_ANY);
+
+    bind(s, (struct sockaddr *) &si_me, sizeof(si_me));
 }
 
 void send_data(char *msg) {
-    if (sendto(s, msg, strlen(msg) , 0 , (struct sockaddr *) &si_other, slen)==-1) {
-        die("sendto()");
-    }
+    sendto(s, msg, strlen(msg), 0, (struct sockaddr *) &si_other, slen);
 }
