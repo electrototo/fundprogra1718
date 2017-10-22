@@ -17,8 +17,8 @@ int menu();
 // funcion menu_juego: pregunta si el usuario quiere tirar o no
 int menu_juego();
 
-// funcion selection_sort: ordena los contenidos de un arreglo de menor a mayor
-void selection_sort(int *, int);
+// funcion insertion_sort: ordena los contenidos de un arreglo de menor a mayor
+void insertion_sort(int *, int);
 
 // funcion swap: funcion auxiliar del que hace uso selection sort para cambiar
 //               de posicion dos numeros en un arreglo
@@ -215,7 +215,7 @@ int comparar(int *jugada, int length) {
     }
 }
 
-void selection_sort(int *n, int length) {
+void insertion_sort(int *n, int length) {
     int key, j;
 
     for (int i = 1; i < length; i++) {
@@ -271,7 +271,7 @@ int preguntar_respuesta(int numero) {
 
 int calcular_puntaje(int *baraja) {
     int p;
-    selection_sort(baraja, 5);
+    insertion_sort(baraja, 5);
     p = comparar(baraja, 5);
 
     return p;
