@@ -58,8 +58,8 @@ int main() {
         for (int i = 0; i < 5; i++) {
             if (computadora_tira) {
                 // Obten los primeros 5 tiros de la computadora
-                for (int i = 0; i < 5; i++)
-                    computadora[i] = dado();
+                for (int j = 0; j < 5; j++)
+                    computadora[j] = dado();
 
                 // calcula el puntaje de la computadora
                 puntaje_computadora = calcular_puntaje(computadora);
@@ -77,15 +77,15 @@ int main() {
                 // si no es el primer tiro que hace, pregunta que dados quiere
                 // volver a tirar
                 if (i != 0) {
-                    for (int i = 0; i < 5; i++) {
-                        if (preguntar_respuesta(i))
-                            jugador[i] = dado();
+                    for (int j = 0; j < 5; j++) {
+                        if (preguntar_respuesta(j))
+                            jugador[j] = dado();
                     }
                 }
                 // de lo contrario, tira todos los dados por primera vez
                 else {
-                    for (int i = 0; i < 5; i++)
-                        jugador[i] = dado();
+                    for (int j = 0; j < 5; j++)
+                        jugador[j] = dado();
                 }
 
                 // calcula el puntaje del jugador
@@ -120,12 +120,14 @@ int main() {
     return 0;
 }
 
+// imprime el menu inicial del juego
 int menu() {
     printf("[1] Iniciar juego\n");
     printf("[2] Salir\n");
 
     int n;
 
+    // repite hasta que el usuario ingrese una respuesta valida
     do {
         printf("Opcion: ");
         scanf("%d", &n);
@@ -133,15 +135,18 @@ int menu() {
 
     printf("\n");
 
+    // regresa el valor ingresado por el usuario
     return n;
 }
 
+// menu que pregunta al usuario si quiere tirar sus dados
 int menu_juego() {
     printf("\n[0] Tirar\n");
     printf("[1] No tirar\n");
 
     int n;
 
+    // repite hasta que el usuario ingrese una respuesta valida
     do {
         printf("Opcion: ");
         scanf("%d", &n);
@@ -149,36 +154,51 @@ int menu_juego() {
     
     printf("\n");
 
+    // regresa el valor ingresado por el usuario
     return n;
 }
 
+// simula un dado que regresa 6 valores: 0 - 5
 char dado() {
     return rand() % 6;
 }
 
+// calcula el puntaje de una baraja ordenada
 int comparar(int *jugada, int length) {
     int anterior;
 
-    int cambios = 0, posibilidad = 0;
+    // variables que almacenan la cuenta de numero unicos que
+    // hay en el arreglo y el maximo de numeros iguales
+    int cambios = 0;
     int max = 0, actual = 1;
 
+    // recorre todo el contenido de los dados 
     for(int i = 1; i < length; i++) {
+        // si el numero en el que se encuentra i no es igual al anterior
         if (jugada[i - 1] != jugada[i]) {
+            // aumenta la variable cambios
             cambios++;
 
+            // actualiza el maximo de numeros iguales si actual es mayor
+            // al maximo previo
             if (actual > max)
                 max = actual;
 
+            // reinicia el conntador de actual a 1
             actual = 1;
         }
+        // aumenta la variable actual si son iguales los numeros
         else {
             actual++;
         }
     }
 
+    // compara por ultima vez si actual es mayor al maximo previo
     if (actual > max)
         max = actual;
 
+    // cambia al numero de cambios que hubo dentro del arreglo
+    // para poder determinar el puntaje
     switch (cambios) {
         // 5 iguales
         case 0:
@@ -215,13 +235,25 @@ int comparar(int *jugada, int length) {
     }
 }
 
+// algoritmo que ordena un arreglo de mayor a menor o de menor a mayor
+// esta implementacion ordena los numeros del arreglo de menor a mayor
+
+// para mayor informacion acerca este algoritmo, connsultar:
+// Introduction to Algorithms, de Thomas H. Cormen, Charles E. Leeiserson,
+// Ronald L. Rivest y Clifford Stein. Paginas 15 - 20.
 void insertion_sort(int *n, int length) {
     int key, j;
 
+    // recorre todo el arreglo
     for (int i = 1; i < length; i++) {
+        // guarda el elemento actual en una variable
         key = n[i];
+        // inicia una nueva variable un numero antes que la posicion actual
+        // de i
         j = i - 1;
 
+        // mientras que key (el elemento actual) sea menor al elemento previo,
+        // intercambia ambos elementos y recorre una posicion a la izquierda
         while (key < n[j] && j >= 0) {
             swap(&n[j], &n[j+1]);
             j--;
@@ -229,6 +261,8 @@ void insertion_sort(int *n, int length) {
     }
 }
 
+// funcion auxiliar que sirve para intercambiar de posicion ambos elementos
+// dentro de un arreglo
 void swap(int *a, int *b) {
     int tmp;
     tmp = *a;
@@ -236,17 +270,23 @@ void swap(int *a, int *b) {
     *b = tmp;
 }
 
+// imprime los dados de forma estilizada
 void imprimir_dados(int *dados) {
+    // debido a que los dados de los jugadores se guardan con numeros,
+    // se debe hacer una relacion entre el numero y la cara de dado
+    // adecuada
     char opciones[6] = {'9', '1', 'J', 'Q', 'K', 'A'};
 
     char d1, d2, d3, d4, d5;
 
+    // guarda los dados en forma de caracteres
     d1 = opciones[dados[0]];
     d2 = opciones[dados[1]];
     d3 = opciones[dados[2]];
     d4 = opciones[dados[3]];
     d5 = opciones[dados[4]];
 
+    // imprime los valores de los dados del jugador en forma de dados
     printf("----- ----- ----- ----- -----\n");
     printf("| %c | | %c | | %c | | %c | | %c |\n", d1, d2, d3, d4, d5);
     printf("----- ----- ----- ----- -----\n");
@@ -254,23 +294,31 @@ void imprimir_dados(int *dados) {
     printf("\n");
 }
 
+// pregunta si el usuario quiere cambiar su dado "numero"
 int preguntar_respuesta(int numero) {
     char respuesta;
 
+    // repite hasta que tenga una respuesta valida
     do {
         printf("Quieres cambiar el dado %d [s, n]? ", numero);
         scanf(" %c", &respuesta);
     } while (respuesta != 's' && respuesta != 'n');
 
+    // si es s la respuesta, regesa verdadero
     if (respuesta == 's')
         return 1;
 
+    // si no, regresa falso
     else
         return 0;
 }
 
+// calcula y regresa el puntaje de los dados del jugador
 int calcular_puntaje(int *baraja) {
     int p;
+
+    // combina los resultados de ambas funciones para obtener el puntaje
+    // total
     insertion_sort(baraja, 5);
     p = comparar(baraja, 5);
 
