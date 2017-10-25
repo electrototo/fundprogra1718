@@ -13,24 +13,40 @@ char ascii_dado();
 int menu();
 void instrucciones();
 
+int get_input(char *);
+
+void generate_answer(char *, int *);
+
+int check_in(char *buf, char letter);
+
+int intersection(char *a, char *b, char *dest);
+
 int main() {
-    char resultado[5];
-
-    int i = 0;
-
     srand(time(0));
 
-    // genera el resultado aleatorio
-    for (i = 0; i < 4; i++)
-        resultado[i] = ascii_dado();
+    char resultado[5], resultado_copy[5], intento[5];
+    int cuenta[6], cuenta_copy[6];
 
-    resultado[i] = '\0';
+    // limpia cuenta
+    for (int i = 0; i < 6; i++)
+        cuenta[i] = 0;
+
+    generate_answer(resultado, cuenta);
+
+    int intentos = 0, won = 0;
 
     // debug
     printf("Resultado: %s\n", resultado);
 
     // opcion escogida
     int op;
+
+    // resultado actual
+    int res;
+
+    // caracteres que se van a imprimir
+    char hint[5];
+    int k = 0, index;
 
     do {
         op = menu();
@@ -44,7 +60,46 @@ int main() {
         return 0;
 
     else {
+        while (intentos < 10 && !won) {
+            printf("\nIngresa intento: ");
 
+            if(get_input(intento) == 4) {
+                printf("El usuario ingreso: %s\n", intento);
+
+                memset(hint, '\0', 5);
+                memcpy(cuenta_copy, cuenta, 6);
+                strcpy(resultado_copy, resultado);
+
+                k = intersection(resultado_copy, intento, hint);
+
+                for (int i = 0; i < 4; i++) {
+                    index = intento[i] - 'a';
+
+                    res = check_in(resultado_copy, intento[i]);
+
+                    // obtiene los que estan pero en posiciones diferentes
+                    if (res == -1 && cuenta_copy[index] > 0) {
+                        hint[k++] = '#';
+                        cuenta_copy[index]--;
+                    }
+                }
+
+                printf("Hint: %s\n", hint);
+
+                if (strcmp(intento, resultado) == 0)
+                    won = 1;
+
+                intentos++;
+            }
+
+            else
+                printf("\nPor favor ingresa una combinacion de cuatro letras entre la a y la f.\n");
+        }
+
+        if (won)
+            printf("\nFelicidades, ganaste\n");
+        else
+            printf("\nLo lamento, perdiste\n");
     }
 }
 
@@ -65,6 +120,8 @@ int menu() {
         scanf("%d", &op);
     } while (op < 1 || op > 3);
 
+    getchar();
+
     return op;
 }
 
@@ -78,4 +135,62 @@ void instrucciones() {
     printf("El simbolo ! significa que acertaste una letra en la posicion correcta,\n");
     printf("mientras que el simbolo # significa que acertaste el valor de una letra\n");
     printf("pero no su posicion.\n\n");
+}
+
+int get_input(char *arr) {
+    // regresa la cantidad de bytes que copio
+    char c;
+
+    int i = 0;
+    // obtiene solo 4 letras y las almacena en arr
+    while ((c = getchar()) != EOF && c != '\n' && i++ < 4 && c >= 'a' && c <= 'f')
+        *arr++ = c;
+
+    *arr = '\0';
+
+    // clear buffer
+    if (c != '\n' && c != EOF)
+        while ((c = getchar()) != EOF && c != '\n');
+
+    return i;
+}
+
+void generate_answer(char *buf, int *count) {
+    char c;
+
+    for (int i = 0; i < 4; i++) {
+        c = ascii_dado();
+
+        *buf++ = c;
+        count[c - 'a']++;
+    }
+
+    *buf = '\0';
+}
+
+int check_in(char *buf, char letter) {
+    for (int i = 0; i < 4; i++) {
+        if (buf[i] == letter) {
+            buf[i] = 'x';
+
+            return -1;
+        }
+    }
+
+    return 0;
+}
+
+int intersection(char *a, char *b, char *dest) {
+    int j = 0, i = 0;
+
+    while (i < 4) {
+        if (a[i] == b[i]) {
+            a[i] = 'x';
+            dest[j++] = '!';
+        }
+
+        i++;
+    }
+
+    return j;
 }
