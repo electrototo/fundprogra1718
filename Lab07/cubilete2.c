@@ -236,6 +236,7 @@ int main() {
                 tira_jugador = menu_jugador();
         }
 
+        // determina e imprime el puntaje final de ambos jugadores
         if (puntaje_computadora > puntaje_jugador)
             printf("\nPerdiste\n");
 
@@ -250,6 +251,10 @@ int main() {
     return 0;
 }
 
+// simula un dado que regresa un valor de los siguientes:
+// 9, 1, j, q, k, a
+// siendo 1 el numero 10, debido a que como es de tipo
+// char, solo se puede almacenar un solo caracter
 char dado() {
     int tiro = rand() % 6;
     char res;
@@ -284,24 +289,29 @@ char dado() {
     return res;
 }
 
+// menu inicial del juego
 int menu() {
     printf("[1] Iniciar juego\n");
     printf("[2] Salir\n");
 
     int n;
-    
+
+    // repite hasta que usuarioo ingrese un valor valido
     do {
         printf("Opcion: ");
         scanf("%d", &n);
 
-    } while (n < 0 || n > 2);
+    } while (n < 1 || n > 2);
 
     printf("\n");
 
+    // regresa el valor que el usuario ingreso
     return n;
 }
 
+// imprime los dados de forma estilizada
 void imprimir_dados(char d1, char d2, char d3, char d4, char d5) {
+    // imprime los valores d1...d5 en forma de dados
     printf("----- ----- ----- ----- -----\n");
     printf("| %c | | %c | | %c | | %c | | %c |\n", d1, d2, d3, d4, d5);
     printf("----- ----- ----- ----- -----\n");
@@ -309,12 +319,14 @@ void imprimir_dados(char d1, char d2, char d3, char d4, char d5) {
     printf("\n");
 }
 
+// menu que le pregunta al usuario si quiere tirar sus dados o conservarlos
 int menu_jugador() {
     printf("[1] Tirar dados\n");
     printf("[2] No tirar\n");
 
     int n;
 
+    // repite hasta que ingrese un valor valido
     do {
         printf("Opcion: ");
         scanf("%d", &n);
@@ -325,27 +337,34 @@ int menu_jugador() {
     return n;
 }
 
+// pregunta si el usuario quiere cambiar el dado "numero"
 int preguntar_respuesta(int numero) {
     char respuesta;
 
+    // repite hasta que el usuario ingrese un valor valido
     do {
         printf("Quieres cambiar el dado %d [s, n]? ", numero);
         scanf(" %c", &respuesta);
     } while (respuesta != 's' && respuesta != 'n');
 
+    // si la respuesta es s, regresa verdadero
     if (respuesta == 's')
         return 1;
-
+    // si n, regresa falso
     else
         return 0;
 }
 
+// calcula el puntaje dependiendo de las variables que almacenan
+// la cantidad de veces que han salido las caras
 int calcular_puntaje(int d1, int d2, int d3, int d4, int d5, int d6) {
     int puntaje = 0;
 
+    // si al menos una cara salio 5 veces, asigna unn puntaje de 6
     if (d1 == 5 || d2 == 5 || d3 == 5 || d4 == 5 || d5 == 5 || d6 == 5)
         puntaje = 6;
 
+    // si todas las caras salieron igual o menor a 1, el puntaje es de 0
     else if (d1 <= 1 && d2 <= 1 && d3 <= 1 && d4 <= 1 && d5 <= 1 && d6 <= 1)
         puntaje = 0;
 
@@ -451,7 +470,9 @@ int calcular_puntaje(int d1, int d2, int d3, int d4, int d5, int d6) {
     return puntaje;
 }
 
+// aumenta la cantidad de veces que ha salido la cara "d"
 void sumar_lados(char d) {
+    // obten el valor de d y aumenta la variable correspondiente
     switch (d) {
         case '9':
             j9++;
@@ -482,7 +503,9 @@ void sumar_lados(char d) {
     }
 }
 
+// resta la cantidad de veces que ha salido la cara "d"
 void restar_lados(char d) {
+    // obten el valor de d y resta la variable correspondiente
     switch (d) {
         case '9':
             j9--;
