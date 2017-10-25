@@ -35,9 +35,6 @@ int main() {
 
     int intentos = 0, won = 0;
 
-    // debug
-    printf("Resultado: %s\n", resultado);
-
     // opcion escogida
     int op;
 
@@ -64,10 +61,11 @@ int main() {
             printf("\nIngresa intento: ");
 
             if(get_input(intento) == 4) {
-                printf("El usuario ingreso: %s\n", intento);
-
                 memset(hint, '\0', 5);
-                memcpy(cuenta_copy, cuenta, 6);
+
+                for (int j = 0; j < 6; j++)
+                    cuenta_copy[j] = cuenta[j];
+
                 strcpy(resultado_copy, resultado);
 
                 k = intersection(resultado_copy, intento, hint);
@@ -99,7 +97,7 @@ int main() {
         if (won)
             printf("\nFelicidades, ganaste\n");
         else
-            printf("\nLo lamento, perdiste\n");
+            printf("\nLo lamento, perdiste\n\nEl resultado era: %s\n", resultado);
     }
 }
 
