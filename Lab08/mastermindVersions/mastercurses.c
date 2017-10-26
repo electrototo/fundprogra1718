@@ -108,18 +108,25 @@ int main() {
 
     generate_answer(respuesta[0]);
 
-    printw("Respuesta: %s\n", respuesta[0]);
+    // print the window borders
+    mvprintw(0, 20, "|------|------|");
+    move(1,0);
+
     refresh();
 
-    int won = 0, k;
-    for (int times = 0; times < 10 && !won; times++){
+    int won = 0, k, times;
+    for (times = 0; times < 10 && !won; times++){
         k = 0;
 
         memset(hint, '\0', 5);
         strcpy(respuesta[1], respuesta[0]);
 
-        printw("Ingresa respuesta: ");
+        mvprintw(times + 1, 0, "Intento: ");
         get_input(user);
+
+        mvprintw(times + 1, 20, "| ");
+        mvprintw(times + 1, 22, user);
+        mvprintw(times + 1, 26, " | ");
 
         k = intersection(respuesta[1], user, hint, '!');
 
@@ -132,15 +139,16 @@ int main() {
         for (int j = 0; j < merge(respuesta[1], user, 4) && k < 4; j++, k++)
             hint[k] = '#';
 
-        printw("Hint: %s\n\n", hint);
+        mvprintw(times + 1, 29, "%s", hint);
+        mvprintw(times + 1, 33, " |");
 
         refresh();
     }
 
     if (!won)
-        printw("Perdiste. La respuesta era: %s\n", respuesta[0]);
+        mvprintw(times + 1, 0, "\nPerdiste. La respuesta era: %s\n", respuesta[0]);
     else
-        printw("Ganaste!\n");
+        mvprintw(times + 1, 0, "\nGanaste!\n");
 
     getch();
     endwin();
