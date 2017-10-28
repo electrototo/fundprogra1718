@@ -69,9 +69,12 @@ int merge(char *a, char *b, int length) {
         else if (a[j] != 'x' && b[k] != 'x') {
             equal++;
             k++;
+            j++;
         }
-        else
+        else {
             k++;
+            j++;
+        }
     }
 
     return equal;
@@ -84,30 +87,46 @@ int main() {
 
     generate_answer(respuesta[0]);
 
-    printf("Respuesta: %s\n", respuesta[0]);
+    printf("MASTERMIND\n\n");
+    printf("Instrucciones del juego:\n");
+    printf("El objetivo del juego es adivinar la combinacion correcta de letras.\n");
+    printf("Para ello tienes que escribir una combinacion de 4 letras entre la a y la f,\n");
+    printf("despues de cada tiro te aparece una pista.\n\nLa pista consiste en el signo de ");
+    printf("exclamacion (!), significando que tienes una\nletra correcta en la posicion ");
+    printf("correcta.\n\nMientras que el simbolo de gato (#) significa que tienes una letra\n");
+    printf("correcta pero en la posicion incorrecta.\n");
+    printf("\nEn total tienes 10 tiros.\nBuena suerte.\n\n");
 
-    int won = 0, k;
-    for (int times = 0; times < 10 && !won; times++){
+
+    int won = 0, k, returned, times = 0;
+    while (times < 10 && !won){
         k = 0;
 
         memset(hint, '\0', 5);
         strcpy(respuesta[1], respuesta[0]);
 
         printf("Ingresa respuesta: ");
-        get_input(user);
+        returned = get_input(user);
 
-        k = intersection(respuesta[1], user, hint, '!');
+        if (returned == 4) {
+            k = intersection(respuesta[1], user, hint, '!');
 
-        if (k == 4)
-            won = 1;
+            if (k == 4)
+                won = 1;
 
-        insertion_sort(respuesta[1], 4);
-        insertion_sort(user, 4);
+            insertion_sort(respuesta[1], 4);
+            insertion_sort(user, 4);
 
-        for (int j = 0; j < merge(respuesta[1], user, 4) && k < 4; j++, k++)
-            hint[k] = '#';
+            for (int j = 0; j < merge(respuesta[1], user, 4) && k < 4; j++, k++)
+                hint[k] = '#';
 
-        printf("Hint: %s\n\n", hint);
+            printf("Hint: %s\n\n", hint);
+
+            times++;
+        }
+
+        else
+            printf("\tIngresa una combinacion de 4 letras entre la a y la f\n\n");
     }
 
     if (!won)
