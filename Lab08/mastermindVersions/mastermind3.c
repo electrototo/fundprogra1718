@@ -4,10 +4,8 @@
 #include <string.h>
 
 void generate_answer(char *buf) {
-    for (int i = 0; i < 4; i++)
-        *buf++ = 'a' + (rand() % 6);
-
-    *buf = '\0';
+    for (int i = 0; i < 5; i++)
+        *buf++ = (i < 4) ? 'a' + (rand() % 6) : '\0';
 }
 
 int intersection(char *a, char *b, char *dest, char letter) {
