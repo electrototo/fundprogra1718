@@ -1,4 +1,3 @@
-#include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
 #include <string.h>
@@ -70,9 +69,12 @@ int merge(char *a, char *b, int length) {
         else if (a[j] != 'x' && b[k] != 'x') {
             equal++;
             k++;
+            j++;
         }
-        else
+        else {
             k++;
+            j++;
+        }
     }
 
     return equal;
@@ -85,7 +87,9 @@ void splash_screen() {
     char msg[] = "Mastermind";
     char msg2[] = "Programado por cristobal liendo";
 
+    attron(COLOR_PAIR(1));
     mvprintw(row/2, (col - strlen(msg))/2, msg);
+    attroff(COLOR_PAIR(1));
     mvprintw(row/2 + 1, (col - strlen(msg2))/2, msg2);
 
     mvprintw(row - 1, 0, "Presiona cualquier tecla para iniciar...");
@@ -96,6 +100,9 @@ void splash_screen() {
 int main() {
     initscr();
     nocbreak();
+
+    start_color();
+    init_pair(1, COLOR_RED, COLOR_BLACK);
 
     splash_screen();
     refresh();
