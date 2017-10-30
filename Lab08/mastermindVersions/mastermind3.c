@@ -36,6 +36,5 @@ int main() {
         for (int j = 0; j < merge(respuesta[1], user, 4) && k < 4; j++, k++) hint[k] = '#';
         printf("Hint: %s\n\n", hint);
     }
-    if (!won) printf("Perdiste. La respuesta era: %s\n", respuesta[0]);
-    else printf("Ganaste!\n");
+    if (!won) {printf("Perdiste. La respuesta era: %s\n", respuesta[0]);} else printf("Ganaste!\n");
 }
