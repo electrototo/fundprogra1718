@@ -1,3 +1,9 @@
+/*
+ * autor: cristobal liendo i
+ * fecha: 30/10/17
+ * descripcion: juego de mastermind
+*/
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
