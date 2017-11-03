@@ -36,14 +36,75 @@ void shuffle(struct carta *b_cartas) {
     }
 }
 
-void imprime_cartas(struct carta *b_cartas) {
-    for (int i = 0; i < 52; i++) {
-        printf("Carta:\n");
-        printf("\tValor: %s\n", b_cartas[i].valor);
-        printf("\tPalo: %s\n", b_cartas[i].palo);
-        printf("\tPuntaje: %d\n", b_cartas[i].puntaje);
+void imprime_cartas(struct carta *b_cartas, int start, int finish) {
+    int num = finish - start;
+    int c_index = start, len = 0;
+
+    // imprime el contenido de las cartas
+    for (int row = 0; row < 7; row++) {
+        for (int column = 0; column < (12 * num) - 2; column++) {
+            // Imprime las partes de arriba y abajo de las cartas
+            if (row == 0 || row == 6) {
+                if (column % 12 == 0 || column % 12 == 9)
+                    printf("*");
+                else if (column % 12 != 10 && column % 12 != 11)
+                    printf("-");
+                else
+                    printf(" ");
+            }
+            else {
+                if (column % 12 == 0 || column % 12 == 9)
+                    printf("*");
+                else if (column % 12 == 7 && row == 1) {
+                    if (strcmp(b_cartas[c_index].valor, "10") == 0)
+                        printf("10");
+                    else
+                        printf(" %s", b_cartas[c_index].valor);
+                }
+                else if (row == 3 && column % 12 == 1) {
+                    len = strlen(b_cartas[c_index].palo);
+
+                    if (len == 8)
+                        printf("%s", b_cartas[c_index].palo);
+                    else if(len == 7)
+                        printf(" %s", b_cartas[c_index].palo);
+                    else
+                        printf(" %s ", b_cartas[c_index].palo);
+                }
+                else if (row == 3 && (column % 12 == 10 || column % 12 == 11))
+                    printf(" ");
+                else {
+                    if (column % 12 != 8 && row == 1)
+                        printf(" ");
+                    else if (row != 1 && row != 3)
+                        printf(" ");
+                }
+
+                if (column % 12 == 0 && column != 0)
+                    c_index++;
+            }
+        }
+        c_index = start;
         printf("\n");
     }
+}
+
+char eleccion() {
+    char op;
+
+    do {
+        printf("Que carta quieres, derecha [d] o izquierda [i]? ");
+        scanf("%c", &op);
+        getchar();
+    } while (op != 'i' && op != 'd');
+
+    return op;
+}
+
+void agrega_carta(struct baraja *baraja1, struct carta a_carta) {
+    baraja1->puntaje_total += a_carta.puntaje;
+    baraja1->cartas[baraja1->index] = a_carta;
+    baraja1->index++;
 }
 
 int main() {
@@ -56,6 +117,18 @@ int main() {
 
     // Crea la baraja del jugador y de la computadora
     struct baraja b_jugador, b_computadora;
+    b_jugador.index = 0;
+    b_computadora.index = 0;
+
+    b_jugador.puntaje_total = 0;
+    b_computadora.puntaje_total = 0;
+
+    // Define la eleccion del usuario
+    char op;
+
+    // Variables que mantienen el control de que cartas
+    // son las que se encuentran en los extremos
+    int l = 0, r = 9;
 
     //Crea las cartas del juego
     int palo_index = 0;
@@ -69,11 +142,50 @@ int main() {
     }
 
     //Imprime las cartas del juego
-    imprime_cartas(baraja_total);
+    imprime_cartas(baraja_total, 0, 13);
+    imprime_cartas(baraja_total, 13, 26);
+    imprime_cartas(baraja_total, 26, 39);
+    imprime_cartas(baraja_total, 39, 52);
+    printf("\n");
 
     //Imprime desordenadas
     shuffle(baraja_total);
-    imprime_cartas(baraja_total);
+    printf("\n");
+    imprime_cartas(baraja_total, 0, 13);
+    imprime_cartas(baraja_total, 13, 26);
+    imprime_cartas(baraja_total, 26, 39);
+    imprime_cartas(baraja_total, 39, 52);
+
+    for (int i = 0; i < 5; i++) {
+        printf("\n");
+        imprime_cartas(baraja_total, l, r + 1);
+
+        op = eleccion();
+
+        // El jugador escogio el de la derecha
+        if (op == 'd') {
+            agrega_carta(&b_jugador, baraja_total[r]);
+            agrega_carta(&b_computadora, baraja_total[l]);
+        }
+        // El jugador escogio el de la izquierda
+        else {
+            agrega_carta(&b_jugador, baraja_total[l]);
+            agrega_carta(&b_computadora, baraja_total[r]);
+        }
+
+        l += 10;
+        r += 10;
+    }
+
+    printf("\nPuntajes:\n");
+    printf("\tJugador: %d", b_jugador.puntaje_total);
+    printf("\tcomputadora: %d\n", b_computadora.puntaje_total);
+
+    printf("\nCartas del jugador:\n");
+    imprime_cartas(b_jugador.cartas, 0, 5);
+
+    printf("\nCartas de la computadora:\n");
+    imprime_cartas(b_computadora.cartas, 0, 5);
 
     return 0;
 }
