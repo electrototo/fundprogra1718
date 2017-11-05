@@ -40,50 +40,23 @@ void imprime_cartas(struct carta *b_cartas, int start, int finish) {
     int num = finish - start;
     int c_index = start, len = 0;
 
-    // imprime el contenido de las cartas
     for (int row = 0; row < 7; row++) {
         for (int column = 0; column < (12 * num) - 2; column++) {
-            // Imprime las partes de arriba y abajo de las cartas
-            if (row == 0 || row == 6) {
-                if (column % 12 == 0 || column % 12 == 9)
-                    printf("*");
-                else if (column % 12 != 10 && column % 12 != 11)
-                    printf("-");
-                else
-                    printf(" ");
-            }
-            else {
-                if (column % 12 == 0 || column % 12 == 9)
-                    printf("*");
-                else if (column % 12 == 7 && row == 1) {
-                    if (strcmp(b_cartas[c_index].valor, "10") == 0)
-                        printf("10");
-                    else
-                        printf(" %s", b_cartas[c_index].valor);
-                }
-                else if (row == 3 && column % 12 == 1) {
-                    len = strlen(b_cartas[c_index].palo);
+            if ((row == 0 || row == 6) && (column % 12 != 10 && column % 12 != 11))
+                printf("-");
+            else if (column % 12 == 0 || column % 12 == 9)
+                printf("*");
+            else if (row == 1 && column % 12 == 7)
+                printf("%s", b_cartas[c_index].valor);
+            else if (row == 3 && column % 12 == 1)
+                printf("%s", b_cartas[c_index].palo);
+            else if ((column % 12 != 8 && row == 1) || (row != 1 && row != 3) || (row == 3 && (column % 12 < 1 || column % 12 > 9)))
+                printf(" ");
 
-                    if (len == 8)
-                        printf("%s", b_cartas[c_index].palo);
-                    else if(len == 7)
-                        printf(" %s", b_cartas[c_index].palo);
-                    else
-                        printf(" %s ", b_cartas[c_index].palo);
-                }
-                else if (row == 3 && (column % 12 == 10 || column % 12 == 11))
-                    printf(" ");
-                else {
-                    if (column % 12 != 8 && row == 1)
-                        printf(" ");
-                    else if (row != 1 && row != 3)
-                        printf(" ");
-                }
-
-                if (column % 12 == 0 && column != 0)
-                    c_index++;
-            }
+            if (column % 12 == 0 && column != 0)
+                c_index++;
         }
+
         c_index = start;
         printf("\n");
     }
@@ -112,8 +85,8 @@ int main() {
 
     struct carta baraja_total[52];
 
-    char palos[4][10] = {"corazon", "diamante", "espada", "trevol"};
-    char valores[13][3] = {"A", "2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K"};
+    char palos[4][10] = {" corazon", "diamante", " espada ", " trevol "};
+    char valores[13][3] = {" A", " 2", " 3", " 4", " 5", " 6", " 7", " 8", " 9", "10", " J", " Q", " K"};
 
     // Crea la baraja del jugador y de la computadora
     struct baraja b_jugador, b_computadora;
