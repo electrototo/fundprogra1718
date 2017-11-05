@@ -9,6 +9,7 @@
 #include <time.h>
 #include <string.h>
 
+// Estructura que representa una sola carta
 struct carta {
     char palo[10];
     char valor[3];
@@ -16,12 +17,15 @@ struct carta {
     int puntaje;
 };
 
+// Estructura que representa la baraja, es decir un conjunto
+// de cartas
 struct baraja {
     int puntaje_total;
     int index;
     struct carta cartas[5];
 };
 
+// Funcion que revuelve las cartas dentro de un arreglo
 void shuffle(struct carta *b_cartas) {
     int index1, index2;
     struct carta tmp;
@@ -36,6 +40,7 @@ void shuffle(struct carta *b_cartas) {
     }
 }
 
+// Funcion que imprime las cartas de un arreglo
 void imprime_cartas(struct carta *b_cartas, int start, int finish) {
     int num = finish - start;
     int c_index = start, len = 0;
@@ -62,6 +67,8 @@ void imprime_cartas(struct carta *b_cartas, int start, int finish) {
     }
 }
 
+// Funcion que le pregunta al jugador cual es la carta que desea
+// seguira preguntando hasta que ingrese una opcion valida
 char eleccion() {
     char op;
 
@@ -74,6 +81,9 @@ char eleccion() {
     return op;
 }
 
+// Funcion que agrega una carta a la baraja especificada
+// de este modo solo se puede usar la misma funcion para
+// ingresar cartas a distintas barajas
 void agrega_carta(struct baraja *baraja1, struct carta a_carta) {
     baraja1->puntaje_total += a_carta.puntaje;
     baraja1->cartas[baraja1->index] = a_carta;
@@ -83,8 +93,13 @@ void agrega_carta(struct baraja *baraja1, struct carta a_carta) {
 int main() {
     srand(time(0));
 
+    // genera un arreglo de cartas el cual va a representar
+    // todas las cartas que hay en juego
     struct carta baraja_total[52];
 
+    // Para no tener que generar las cartas de manera manual,
+    // se especifican dentro de arreglos los valores y palos
+    // que pueden tomar las distintas cartas
     char palos[4][10] = {" corazon", "diamante", " espada ", " trevol "};
     char valores[13][3] = {" A", " 2", " 3", " 4", " 5", " 6", " 7", " 8", " 9", "10", " J", " Q", " K"};
 
@@ -106,10 +121,18 @@ int main() {
     //Crea las cartas del juego
     int palo_index = 0;
     for (int i = 0; i < 52; i++) {
+        // Copia el palo atual al palo de la carta,
+        // al igual que el valor de las cartas especificado
+        // en el arreglo bidimensional en "valores"
         strcpy(baraja_total[i].palo, palos[palo_index]);
         strcpy(baraja_total[i].valor, valores[i % 13]);
+
+        // asigna un pntaje del 1 al 13 dependiendo del
+        // valor de la carta
         baraja_total[i].puntaje = (i % 13) + 1;
 
+        // cada 13 cartas cambia el palo actual de las
+        // cartas
         if ((i % 13) + 1 == 13)
             palo_index++;
     }
@@ -121,7 +144,7 @@ int main() {
     imprime_cartas(baraja_total, 39, 52);
     printf("\n");
 
-    //Imprime desordenadas
+    // Desordena e imprime desordenadas
     shuffle(baraja_total);
     printf("\n");
     imprime_cartas(baraja_total, 0, 13);
@@ -129,6 +152,7 @@ int main() {
     imprime_cartas(baraja_total, 26, 39);
     imprime_cartas(baraja_total, 39, 52);
 
+    // El jugador tiene nada mas 5 intentos
     for (int i = 0; i < 5; i++) {
         printf("\n");
         imprime_cartas(baraja_total, l, r + 1);
@@ -146,17 +170,21 @@ int main() {
             agrega_carta(&b_computadora, baraja_total[r]);
         }
 
+        // dentro del arreglo de cartas, recorre 10 unidades
         l += 10;
         r += 10;
     }
 
+    // Imprime los puntajes
     printf("\nPuntajes:\n");
     printf("\tJugador: %d", b_jugador.puntaje_total);
     printf("\tcomputadora: %d\n", b_computadora.puntaje_total);
 
+    // Imprime las cartas del juador
     printf("\nCartas del jugador:\n");
     imprime_cartas(b_jugador.cartas, 0, 5);
 
+    // Imprime las cartas de la computadora
     printf("\nCartas de la computadora:\n");
     imprime_cartas(b_computadora.cartas, 0, 5);
 
