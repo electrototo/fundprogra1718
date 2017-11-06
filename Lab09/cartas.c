@@ -9,6 +9,9 @@
 #include <time.h>
 #include <string.h>
 
+typedef struct carta Carta;
+typedef struct baraja Baraja;
+
 // Estructura que representa una sola carta
 struct carta {
     char palo[10];
@@ -26,7 +29,7 @@ struct baraja {
 };
 
 // Funcion que revuelve las cartas dentro de un arreglo
-void shuffle(struct carta *b_cartas) {
+void shuffle(Carta *b_cartas) {
     int index1, index2;
     struct carta tmp;
 
@@ -41,7 +44,7 @@ void shuffle(struct carta *b_cartas) {
 }
 
 // Funcion que imprime las cartas de un arreglo
-void imprime_cartas(struct carta *b_cartas, int start, int finish) {
+void imprime_cartas(Carta *b_cartas, int start, int finish) {
     int num = finish - start;
     int c_index = start, len = 0;
 
@@ -83,7 +86,7 @@ char eleccion() {
 // Funcion que agrega una carta a la baraja especificada
 // de este modo solo se puede usar la misma funcion para
 // ingresar cartas a distintas barajas
-void agrega_carta(struct baraja *baraja1, struct carta a_carta) {
+void agrega_carta(Baraja *baraja1, Carta a_carta) {
     baraja1->puntaje_total += a_carta.puntaje;
     baraja1->cartas[baraja1->index] = a_carta;
     baraja1->index++;
@@ -94,7 +97,7 @@ int main() {
 
     // genera un arreglo de cartas el cual va a representar
     // todas las cartas que hay en juego
-    struct carta baraja_total[52];
+    Carta baraja_total[52];
 
     // Para no tener que generar las cartas de manera manual,
     // se especifican dentro de arreglos los valores y palos
@@ -103,7 +106,7 @@ int main() {
     char valores[13][3] = {" A", " 2", " 3", " 4", " 5", " 6", " 7", " 8", " 9", "10", " J", " Q", " K"};
 
     // Crea la baraja del jugador y de la computadora
-    struct baraja b_jugador, b_computadora;
+    Baraja b_jugador, b_computadora;
 
     // Define la eleccion del usuario
     char op, repetir;
