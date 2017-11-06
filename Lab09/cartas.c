@@ -132,6 +132,7 @@ int main() {
     }
 
     //Imprime las cartas del juego
+    printf("Cartas ordenadas:\n");
     imprime_cartas(baraja_total, 0, 13);
     imprime_cartas(baraja_total, 13, 26);
     imprime_cartas(baraja_total, 26, 39);
@@ -149,7 +150,7 @@ int main() {
 
         // Desordena e imprime desordenadas
         shuffle(baraja_total);
-        printf("\n");
+        printf("\nCartas desordenadas:\n");
         imprime_cartas(baraja_total, 0, 13);
         imprime_cartas(baraja_total, 13, 26);
         imprime_cartas(baraja_total, 26, 39);
