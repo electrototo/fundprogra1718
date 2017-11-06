@@ -13,7 +13,7 @@
 struct carta {
     char palo[10];
     char valor[3];
-    
+
     int puntaje;
 };
 
@@ -74,8 +74,7 @@ char eleccion() {
 
     do {
         printf("Que carta quieres, derecha [d] o izquierda [i]? ");
-        scanf("%c", &op);
-        getchar();
+        scanf(" %c", &op);
     } while (op != 'i' && op != 'd');
 
     return op;
@@ -105,18 +104,13 @@ int main() {
 
     // Crea la baraja del jugador y de la computadora
     struct baraja b_jugador, b_computadora;
-    b_jugador.index = 0;
-    b_computadora.index = 0;
-
-    b_jugador.puntaje_total = 0;
-    b_computadora.puntaje_total = 0;
 
     // Define la eleccion del usuario
-    char op;
+    char op, repetir;
 
     // Variables que mantienen el control de que cartas
     // son las que se encuentran en los extremos
-    int l = 0, r = 9;
+    int l, r;
 
     //Crea las cartas del juego
     int palo_index = 0;
@@ -144,49 +138,65 @@ int main() {
     imprime_cartas(baraja_total, 39, 52);
     printf("\n");
 
-    // Desordena e imprime desordenadas
-    shuffle(baraja_total);
-    printf("\n");
-    imprime_cartas(baraja_total, 0, 13);
-    imprime_cartas(baraja_total, 13, 26);
-    imprime_cartas(baraja_total, 26, 39);
-    imprime_cartas(baraja_total, 39, 52);
+    do {
+        l = 0, r = 9;
 
-    // El jugador tiene nada mas 5 intentos
-    for (int i = 0; i < 5; i++) {
+        b_jugador.index = 0;
+        b_computadora.index = 0;
+
+        b_jugador.puntaje_total = 0;
+        b_computadora.puntaje_total = 0;
+
+        // Desordena e imprime desordenadas
+        shuffle(baraja_total);
         printf("\n");
-        imprime_cartas(baraja_total, l, r + 1);
+        imprime_cartas(baraja_total, 0, 13);
+        imprime_cartas(baraja_total, 13, 26);
+        imprime_cartas(baraja_total, 26, 39);
+        imprime_cartas(baraja_total, 39, 52);
 
-        op = eleccion();
+        // El jugador tiene nada mas 5 intentos
+        for (int i = 0; i < 5; i++) {
+            printf("\n");
+            imprime_cartas(baraja_total, l, r + 1);
 
-        // El jugador escogio el de la derecha
-        if (op == 'd') {
-            agrega_carta(&b_jugador, baraja_total[r]);
-            agrega_carta(&b_computadora, baraja_total[l]);
+            op = eleccion();
+
+            // El jugador escogio el de la derecha
+            if (op == 'd') {
+                agrega_carta(&b_jugador, baraja_total[r]);
+                agrega_carta(&b_computadora, baraja_total[l]);
+            }
+            // El jugador escogio el de la izquierda
+            else {
+                agrega_carta(&b_jugador, baraja_total[l]);
+                agrega_carta(&b_computadora, baraja_total[r]);
+            }
+
+            // dentro del arreglo de cartas, recorre 10 unidades
+            l += 10;
+            r += 10;
         }
-        // El jugador escogio el de la izquierda
-        else {
-            agrega_carta(&b_jugador, baraja_total[l]);
-            agrega_carta(&b_computadora, baraja_total[r]);
-        }
 
-        // dentro del arreglo de cartas, recorre 10 unidades
-        l += 10;
-        r += 10;
-    }
+        // Imprime los puntajes
+        printf("\nPuntajes:\n");
+        printf("\tJugador: %d", b_jugador.puntaje_total);
+        printf("\tcomputadora: %d\n", b_computadora.puntaje_total);
 
-    // Imprime los puntajes
-    printf("\nPuntajes:\n");
-    printf("\tJugador: %d", b_jugador.puntaje_total);
-    printf("\tcomputadora: %d\n", b_computadora.puntaje_total);
+        // Imprime las cartas del juador
+        printf("\nCartas del jugador:\n");
+        imprime_cartas(b_jugador.cartas, 0, 5);
 
-    // Imprime las cartas del juador
-    printf("\nCartas del jugador:\n");
-    imprime_cartas(b_jugador.cartas, 0, 5);
+        // Imprime las cartas de la computadora
+        printf("\nCartas de la computadora:\n");
+        imprime_cartas(b_computadora.cartas, 0, 5);
 
-    // Imprime las cartas de la computadora
-    printf("\nCartas de la computadora:\n");
-    imprime_cartas(b_computadora.cartas, 0, 5);
+        do {
+            printf("\n\nDeseas jugar de nuevo [s, n]? ");
+            scanf(" %c", &repetir);
+        } while (repetir != 's' && repetir != 'n');
+
+    } while (repetir == 's');
 
     return 0;
 }
