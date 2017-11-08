@@ -34,7 +34,9 @@ int main() {
 
         if (x < l - 1 && matriz[y][x + 1] != 1 && matriz[y][x + 1] != 2) {
             matriz[y][x + 1] = 2;
-            area--;
+            
+            if(x >= 1 && y >= 1)
+                area--;
         }
 
         if (y < a - 1 && x >= 1 && matriz[y + 1][x] != 2 && matriz[y + 1][x] != 1) {
