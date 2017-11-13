@@ -127,7 +127,14 @@ int check_position(char tablero[5][5], int x, int y, int length, int orientation
 }
 
 void recorrer(struct control_computadora *c, int from) {
+    posicion tmp;
 
+    c->index--;
+    for (int i = from; i < 24; i++) {
+        tmp = c->posible[i];
+        c->posible[i] = c->posible[i + 1];
+        c->posible[i + 1] = tmp;
+    }
 }
 
 int main() {
@@ -245,6 +252,7 @@ int main() {
     }
 
     printf("\nEl juego ha inciado\n");
+    int c_tiro = 0;
     while (jugador1.puntaje < 7 && computadora.puntaje < 7) {
         do {
             // Turno del jugador
@@ -273,10 +281,29 @@ int main() {
             }
         } while(!validas);
 
+
+        // turno de la computadora
+        c_tiro = rand() % c_tiros.index;
+        x = c_tiros.posible[c_tiro].x;
+        y = c_tiros.posible[c_tiro].y;
+
+        if (jugador1.tablero[y][x] == '|' || jugador1.tablero[y][x] == '=') {
+            jugador1.tablero[y][x] = 'x';
+            computadora.puntaje++;
+        }
+        else {
+            jugador1.tablero[y][x] = 'O';
+        }
+
+        recorrer(&c_tiros, c_tiro);
+
+        // imprimir tableros
         printf("\nTus tiros:\n");
         print_tablero(jugador1.tiros);
 
-        // turno de la computadora
+        printf("\nTus barcos:\n");
+        print_tablero(jugador1.tablero);
+        printf("\n");
     }
 
     if (jugador1.puntaje == 7)
