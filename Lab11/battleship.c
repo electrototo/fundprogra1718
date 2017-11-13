@@ -138,6 +138,19 @@ void recorrer(struct control_computadora *c, int from) {
 }
 
 int main() {
+    printf("Instrucciones:\n");
+    printf("El objetivo del juego es hundir todos los barcos enemigos.\n");
+    printf("Al principio tendras que posicionar todos los barcos\n");
+    printf("dentro de la cuadricula.");
+    printf("\n\nTienes un barco de 3 unidades de longitud y otros dos barcos de\n");
+    printf("dos de 2 unidades. Para poder ingresar las coordenadas\n");
+    printf("tienes que poner la hilera (de la letra a hasta la e) y la\n");
+    printf("columna (del 1 al 5) como el siguiente formato: a1 o A1.\n\n");
+    printf("Se imprimen dos pantallas, la primera son tus barcos y la segunda\n");
+    printf("muestra las posiciones en las que has tirado.\n\n");
+    printf("Una x significa que le atinastte al barco enemigo, o que el enemigo\n");
+    printf("le atino a un barco tuyo, mientras que una O significa que no le atinaste.\n\n");
+    printf("El primero en hundir todos los barcos gana.\n\nBuena suerte.\n");
     srand(time(0));
 
     jugador jugador1, computadora;
