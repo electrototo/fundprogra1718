@@ -85,6 +85,45 @@ Cancion agregar_cancion() {
     return song;
 }
 
+void delete_song(Biblioteca *bib, int id) {
+    Cancion tmp = bib->canciones[id];
+
+    // recalcula la duracion de la biblioteca
+    bib->duracion -= tmp.duracion;
+
+    // recalcula el promedio de la biblioteca
+
+    if (bib->index - 1 != 0) {
+        bib->promedio = bib->promedio * bib->index;
+        bib->promedio -= tmp.duracion;
+        bib->promedio /= bib->index - 1;
+    }
+    else { 
+        bib->promedio = 0;
+    }
+
+    bib->index--;
+
+    for (int i = id; i < 19; i++) {
+        tmp = bib->canciones[i];
+        bib->canciones[i] = bib->canciones[i + 1];
+        bib->canciones[i + 1] = tmp;
+    }
+
+    int max = 0, index;
+    // recalcula la cancion mas larga
+    if (bib->cancion_mas_larga == id) {
+        for (int i = 0; i < bib->index; i++) {
+            if (bib->canciones[i].duracion > max) {
+                max = bib->canciones[i].duracion;
+                index = i;
+            }
+        }
+
+        bib->cancion_mas_larga = index;
+    }
+}
+
 int main() {
     FILE *bib_db;
 
@@ -142,12 +181,19 @@ int main() {
                     printf("\tGenero: %s", bib.canciones[i].genero);
                     printf("\tDuracion: %d:%02d\n", bib.canciones[i].duracion / 60,
                            bib.canciones[i].duracion % 60);
+                    printf("\tid: %d\n", i);
                     printf("\n");
                 }
 
                 break;
 
             case 3:
+                printf("\tIngresa el ID: ");
+                scanf("%d", &cancion_index);
+                getchar();
+
+                delete_song(&bib, cancion_index);
+
                 break;
 
             case 4:
