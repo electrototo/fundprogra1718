@@ -42,6 +42,8 @@ int average(Biblioteca bib, Cancion *canciones) {
 
 int menu() {
     int choice;
+    char b[4];
+
 
     printf("\n");
     printf("[1] Agregar una cancion nueva\n");
@@ -113,12 +115,17 @@ void delete_song(Biblioteca *bib, int id) {
     int max = 0, index;
     // recalcula la cancion mas larga
     if (bib->cancion_mas_larga == id) {
-        for (int i = 0; i < bib->index; i++) {
-            if (bib->canciones[i].duracion > max) {
-                max = bib->canciones[i].duracion;
-                index = i;
+
+        if (bib->index > 0) {
+            for (int i = 0; i < bib->index; i++) {
+                if (bib->canciones[i].duracion > max) {
+                    max = bib->canciones[i].duracion;
+                    index = i;
+                }
             }
         }
+        else
+            index = -1;
 
         bib->cancion_mas_larga = index;
     }
@@ -146,11 +153,10 @@ int main() {
     }
     else {
         fread(&bib, sizeof(bib), 1, bib_db);
-
         printf("%d canciones en la biblioteca\n", bib.index);
     }
 
-    bib_db = fopen("biblioteca.dat", "wb");
+    fclose(bib_db);
 
     int menu_choice, cancion_index;
     while ((menu_choice = menu()) != 7) {
@@ -172,17 +178,26 @@ int main() {
 
                 bib.canciones[bib.index++] = c_agregar;
 
+                bib_db = fopen("biblioteca.dat", "w");
+                fwrite(&bib, sizeof(bib), 1, bib_db);
+                fclose(bib_db);
+
                 break;
 
             case 2:
-                for (int i = 0; i < bib.index; i++) {
-                    printf("\tNombre: %s", bib.canciones[i].nombre);
-                    printf("\tArtista: %s", bib.canciones[i].artista);
-                    printf("\tGenero: %s", bib.canciones[i].genero);
-                    printf("\tDuracion: %d:%02d\n", bib.canciones[i].duracion / 60,
-                           bib.canciones[i].duracion % 60);
-                    printf("\tid: %d\n", i);
-                    printf("\n");
+                if (bib.index > 0) {
+                    for (int i = 0; i < bib.index; i++) {
+                        printf("\tNombre: %s", bib.canciones[i].nombre);
+                        printf("\tArtista: %s", bib.canciones[i].artista);
+                        printf("\tGenero: %s", bib.canciones[i].genero);
+                        printf("\tDuracion: %d:%02d\n", bib.canciones[i].duracion / 60,
+                            bib.canciones[i].duracion % 60);
+                        printf("\tid: %d\n", i);
+                        printf("\n");
+                    }
+                }
+                else {
+                    printf("\tNo se encontraron canciones en la biblioteca\n");
                 }
 
                 break;
@@ -193,6 +208,10 @@ int main() {
                 getchar();
 
                 delete_song(&bib, cancion_index);
+
+                bib_db = fopen("biblioteca.dat", "w");
+                fwrite(&bib, sizeof(bib), 1, bib_db);
+                fclose(bib_db);
 
                 break;
 
@@ -209,12 +228,16 @@ int main() {
             case 6:
                 cancion_index = bib.cancion_mas_larga;
 
-                printf("\tNombre: %s", bib.canciones[cancion_index].nombre);
-                printf("\tArtista: %s", bib.canciones[cancion_index].artista);
-                printf("\tGenero: %s", bib.canciones[cancion_index].genero);
-                printf("\tDuracion: %d:%02d\n", bib.canciones[cancion_index].duracion / 60,
-                        bib.canciones[cancion_index].duracion % 60);
-                printf("\n");
+                if (cancion_index != -1) {
+                    printf("\tNombre: %s", bib.canciones[cancion_index].nombre);
+                    printf("\tArtista: %s", bib.canciones[cancion_index].artista);
+                    printf("\tGenero: %s", bib.canciones[cancion_index].genero);
+                    printf("\tDuracion: %d:%02d\n", bib.canciones[cancion_index].duracion / 60,
+                            bib.canciones[cancion_index].duracion % 60);
+                    printf("\n");
+                }
+                else
+                    printf("\tNo se encontraron canciones en la biblioteca\n");
 
                 break;
 
@@ -223,11 +246,6 @@ int main() {
         }
 
     }
-
-    printf("Escribiendo datos...\n");
-    fwrite(&bib, sizeof(bib), 1, bib_db);
-
-    fclose(bib_db);
 
     return 0;
 }
