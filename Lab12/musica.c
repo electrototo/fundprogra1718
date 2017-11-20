@@ -43,6 +43,7 @@ int average(Biblioteca bib, Cancion *canciones) {
 int menu() {
     int choice;
 
+    printf("\n");
     printf("[1] Agregar una cancion nueva\n");
     printf("[2] Enlistar todas las canciones\n");
     printf("[3] Eliminar una cancion\n");
@@ -56,6 +57,8 @@ int menu() {
         scanf("%d", &choice);
         getchar();
     } while (choice < 1 || choice > 8);
+
+    printf("\n");
 
     return choice;
 }
@@ -110,7 +113,7 @@ int main() {
 
     bib_db = fopen("biblioteca.dat", "wb");
 
-    int menu_choice;
+    int menu_choice, cancion_index;
     while ((menu_choice = menu()) != 7) {
         switch (menu_choice) {
             case 1:
@@ -146,11 +149,27 @@ int main() {
 
             case 3:
                 break;
+
             case 4:
+                printf("\tLa biblioteca dura %d minutos y %d segundos\n",
+                       bib.duracion / 60, bib.duracion % 60);
                 break;
+
             case 5:
+                printf("\tEl promedio por cancion es de %d minutos y %d segundos\n",
+                       bib.promedio / 60, bib.promedio % 60);
                 break;
+
             case 6:
+                cancion_index = bib.cancion_mas_larga;
+
+                printf("\tNombre: %s", bib.canciones[cancion_index].nombre);
+                printf("\tArtista: %s", bib.canciones[cancion_index].artista);
+                printf("\tGenero: %s", bib.canciones[cancion_index].genero);
+                printf("\tDuracion: %d:%02d\n", bib.canciones[cancion_index].duracion / 60,
+                        bib.canciones[cancion_index].duracion % 60);
+                printf("\n");
+
                 break;
 
             default:
