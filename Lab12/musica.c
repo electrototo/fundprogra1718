@@ -14,13 +14,11 @@ typedef struct {
     char genero[50];
     // la duracion total se guarda en segundos
     int duracion;
-    // para poder almacenarlo dentro de la biblioteca
-    int id;
 
 } Cancion;
 
 typedef struct {
-    int canciones[20];
+    Cancion canciones[20];
     int index;
 
     int duracion;
@@ -85,20 +83,17 @@ Cancion agregar_cancion() {
 }
 
 int main() {
-    FILE *bib_db, *canciones_db;
+    FILE *bib_db;
 
     bib_db = fopen("biblioteca.dat", "rb");
-    canciones_db = fopen("canciones.dat", "rb");
 
     Biblioteca bib;
-    Cancion canciones[20];
 
     Cancion c_agregar, tmp;
 
-    if (bib_db == NULL || canciones_db == NULL) {
+    if (bib_db == NULL) {
         printf("Creando una nueva base de datos\n");
         bib_db = fopen("biblioteca.dat", "wb");
-        canciones_db = fopen("canciones.dat", "wb");
 
         bib.index = 0;
         bib.id = 0;
@@ -109,7 +104,6 @@ int main() {
     }
     else {
         fread(&bib, sizeof(bib), 1, bib_db);
-        fread(&canciones, sizeof(canciones), 1, canciones_db);
 
         printf("%d canciones en la biblioteca\n", bib.index);
     }
@@ -128,26 +122,23 @@ int main() {
                 if (bib.cancion_mas_larga == -1)
                     bib.cancion_mas_larga = 0;
                 else {
-                    tmp = canciones[bib.cancion_mas_larga];
+                    tmp = bib.canciones[bib.cancion_mas_larga];
 
                     if (c_agregar.duracion > tmp.duracion)
                         bib.cancion_mas_larga = bib.index;
                 }
 
-                c_agregar.id = bib.id++;
-
-                canciones[bib.index++] = c_agregar;
-
+                bib.canciones[bib.index++] = c_agregar;
 
                 break;
 
             case 2:
                 for (int i = 0; i < bib.index; i++) {
-                    printf("\tNombre: %s", canciones[i].nombre);
-                    printf("\tArtista: %s", canciones[i].artista);
-                    printf("\tGenero: %s", canciones[i].genero);
-                    printf("\tDuracion: %d:%02d\n", canciones[i].duracion / 60,
-                           canciones[i].duracion % 60);
+                    printf("\tNombre: %s", bib.canciones[i].nombre);
+                    printf("\tArtista: %s", bib.canciones[i].artista);
+                    printf("\tGenero: %s", bib.canciones[i].genero);
+                    printf("\tDuracion: %d:%02d\n", bib.canciones[i].duracion / 60,
+                           bib.canciones[i].duracion % 60);
                     printf("\n");
                 }
 
@@ -170,10 +161,8 @@ int main() {
 
     printf("Escribiendo datos...\n");
     fwrite(&bib, sizeof(bib), 1, bib_db);
-    fwrite(&canciones, sizeof(canciones), 1, canciones_db);
 
     fclose(bib_db);
-    fclose(canciones_db);
 
     return 0;
 }
